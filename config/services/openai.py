@@ -1,7 +1,7 @@
 import logging
 from openai import OpenAI
 from django.conf import settings
-from .providers import LLMProvider, EmbeddingProvider
+from .providers import LLMProvider, EmbeddingProvider, RateLimitError, ServiceUnavailableError
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +36,11 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
             return response.choices[0].message.content or ""
         except Exception as e:
             logger.error(f"OpenAI generation error: {e}")
+            err_msg = str(e).lower()
+            if "429" in err_msg or "quota" in err_msg or "rate_limit" in err_msg:
+                raise RateLimitError("OpenAI API quota or rate limit exceeded. Please check your billing details.") from e
+            if "503" in err_msg or "unavailable" in err_msg or "overloaded" in err_msg:
+                raise ServiceUnavailableError("OpenAI API is temporarily unavailable. Please try again.") from e
             raise
 
     def embed_text(self, text: str) -> list[float]:
@@ -48,6 +53,11 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
             return response.data[0].embedding
         except Exception as e:
             logger.error(f"OpenAI embedding error: {e}")
+            err_msg = str(e).lower()
+            if "429" in err_msg or "quota" in err_msg or "rate_limit" in err_msg:
+                raise RateLimitError("OpenAI API quota or rate limit exceeded. Please check your billing details.") from e
+            if "503" in err_msg or "unavailable" in err_msg or "overloaded" in err_msg:
+                raise ServiceUnavailableError("OpenAI API is temporarily unavailable. Please try again.") from e
             raise
 
     def embed_texts(self, texts: list[str]) -> list[list[float]]:
@@ -60,4 +70,10 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
             return [data.embedding for data in response.data]
         except Exception as e:
             logger.error(f"OpenAI multi-embedding error: {e}")
+            err_msg = str(e).lower()
+            if "429" in err_msg or "quota" in err_msg or "rate_limit" in err_msg:
+                raise RateLimitError("OpenAI API quota or rate limit exceeded. Please check your billing details.") from e
+            if "503" in err_msg or "unavailable" in err_msg or "overloaded" in err_msg:
+                raise ServiceUnavailableError("OpenAI API is temporarily unavailable. Please try again.") from e
             raise
+
