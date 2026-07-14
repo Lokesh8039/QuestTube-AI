@@ -1,0 +1,9 @@
+django>=5.0
+djangorestframework
+djangorestframework-simplejwt
+django-cors-headers
+python-dotenv
+google-genai
+openai
+youtube-transcript-api
+numpy

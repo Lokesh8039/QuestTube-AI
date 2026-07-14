@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuestTube AI — YouTube Research Assistant</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- CSS styles -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Background Gradient Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <!-- App Container -->
+    <div class="app-layout" id="appLayout" style="display: none;">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">Q</div>
+                <span class="brand-name">QuestTube <span class="brand-ai">AI</span></span>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item active" data-target="dashboard">
+                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" data-target="chat">
+                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+                    <span>AI Chat (RAG)</span>
+                </a>
+                <a href="#" class="menu-item" data-target="research">
+                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                    <span>Research Lab</span>
+                </a>
+                <a href="#" class="menu-item" data-target="learning">
+                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5.89 12.5L12 15.84l6.11-3.34L12 9.16 5.89 12.5z"/></svg>
+                    <span>Learning Hub</span>
+                </a>
+                <a href="#" class="menu-item" data-target="analytics">
+                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                    <span>Analytics</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar" id="userAvatar">U</div>
+                    <div class="user-details">
+                        <div class="username" id="usernameDisplay">User</div>
+                        <div class="user-role">Research Assistant</div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" width="18" height="18"><path d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 0 1 2 2v4h-2V4H4v16h10v-4h2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10z"/></svg>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Panel -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1 class="header-title" id="pageTitle">Dashboard</h1>
+                <div class="header-actions">
+                    <button class="btn btn-secondary btn-icon" id="refreshBtn">
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                    </button>
+                    <div class="theme-badge">QuestTube API v1</div>
+                </div>
+            </header>
+
+            <!-- Page Panels -->
+            <div class="page-container">
+                
+                <!-- 1. DASHBOARD PAGE -->
+                <section class="page-panel active" id="panel-dashboard">
+                    <div class="grid grid-2">
+                        <!-- Add Video Card -->
+                        <div class="glass-card">
+                            <h2 class="card-title">Add YouTube Content</h2>
+                            <p class="card-subtitle">Import transcripts for semantic research and comparative AI study.</p>
+                            
+                            <!-- Tabs -->
+                            <div class="tabs">
+                                <button class="tab-btn active" data-tab="single-video">Single Video</button>
+                                <button class="tab-btn" data-tab="playlist">Playlist Import</button>
+                            </div>
+                            
+                            <!-- Tab: Single Video -->
+                            <div class="tab-content active" id="tab-single-video">
+                                <form id="addVideoForm" class="form-group">
+                                    <label class="form-label" for="videoUrl">YouTube URL</label>
+                                    <input class="form-input" type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." required>
+                                    <button class="btn btn-primary" type="submit">Add Video</button>
+                                </form>
+                            </div>
+                            
+                            <!-- Tab: Playlist -->
+                            <div class="tab-content" id="tab-playlist">
+                                <form id="importPlaylistForm" class="form-group">
+                                    <label class="form-label" for="playlistUrl">Playlist URL</label>
+                                    <input class="form-input" type="url" id="playlistUrl" placeholder="https://www.youtube.com/playlist?list=..." required>
+                                    <button class="btn btn-primary" type="submit">Import Playlist</button>
+                                </form>
+                            </div>
+                            
+                            <div id="dashboardFeedback" class="feedback-msg"></div>
+                        </div>
+
+                        <!-- System Status Card -->
+                        <div class="glass-card">
+                            <h2 class="card-title">Storage & Limit Summary</h2>
+                            <p class="card-subtitle">Current account resource utilization</p>
+                            <div class="stats-row">
+                                <div class="stat-box">
+                                    <div class="stat-val" id="totalVideosCount">0</div>
+                                    <div class="stat-lbl">Videos Ingested</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-val" id="tokensUsedCount">0</div>
+                                    <div class="stat-lbl">Tokens Used</div>
+                                </div>
+                            </div>
+                            <div class="limit-bar-container">
+                                <div class="limit-bar-label">
+                                    <span>Token Usage Limit</span>
+                                    <span id="tokenLimitPercentage">0%</span>
+                                </div>
+                                <div class="limit-bar">
+                                    <div class="limit-progress" id="tokenProgressBar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Videos Database -->
+                    <div class="glass-card table-card margin-top">
+                        <div class="table-header">
+                            <h2 class="card-title">Processed Video Database</h2>
+                            <div class="table-actions">
+                                <span class="badge" id="videoDatabaseCount">0 videos</span>
+                            </div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Video Title</th>
+                                        <th>Channel</th>
+                                        <th>Status</th>
+                                        <th>Date Added</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="videoTableBody">
+                                    <tr>
+                                        <td colspan="5" class="table-empty">No videos found. Submit a URL above to start!</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. AI CHAT (RAG) PAGE -->
+                <section class="page-panel" id="panel-chat">
+                    <div class="chat-layout">
+                        <!-- Chat Side panel (Videos Select) -->
+                        <div class="chat-sidebar">
+                            <h3 class="panel-subtitle">Select Reference Videos</h3>
+                            <p class="panel-desc">AI will contextually answer query only from checked videos.</p>
+                            <div class="videos-select-list" id="chatVideosChecklist">
+                                <!-- Populated dynamically -->
+                                <p class="list-empty">No completed videos found.</p>
+                            </div>
+                        </div>
+
+                        <!-- Chat Area -->
+                        <div class="chat-main">
+                            <!-- Messages view -->
+                            <div class="chat-body" id="chatBody">
+                                <div class="assistant-welcome">
+                                    <div class="bot-icon">Q</div>
+                                    <h2>YouTube RAG Research Chat</h2>
+                                    <p>Select the reference videos in the left panel, and ask questions. I will reply using verified quotes and timestamps from the selected video transcripts.</p>
+                                </div>
+                            </div>
+
+                            <!-- Input prompt area -->
+                            <div class="chat-footer">
+                                <form id="chatForm" class="chat-input-wrapper">
+                                    <input type="text" id="chatInput" class="chat-input" placeholder="What does the video say about..." required autocomplete="off">
+                                    <button class="chat-submit-btn" type="submit">
+                                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Video Sidepane -->
+                        <div class="video-preview-pane" id="videoPreviewPane" style="display: none;">
+                            <div class="video-pane-header">
+                                <h3 id="previewVideoTitle">YouTube Player</h3>
+                                <button class="close-pane-btn" onclick="document.getElementById('videoPreviewPane').style.display='none'">×</button>
+                            </div>
+                            <div class="iframe-container">
+                                <div id="youtubePlayerPlaceholder"></div>
+                            </div>
+                            <div class="video-pane-info">
+                                <p id="previewTimestampInfo">Citation jumps will play here automatically.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. RESEARCH LAB PAGE -->
+                <section class="page-panel" id="panel-research">
+                    <div class="research-grid">
+                        <div class="research-settings glass-card">
+                            <h2 class="card-title">Research Workspace</h2>
+                            <p class="card-subtitle">Choose multiple videos and execute analytical research models.</p>
+                            
+                            <div class="form-group margin-top">
+                                <label class="form-label">Reference Database</label>
+                                <div class="videos-select-list" id="researchVideosChecklist" style="max-height: 180px;">
+                                    <p class="list-empty">No videos completed.</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group margin-top">
+                                <label class="form-label" for="researchTopic">Research Topic / Concept</label>
+                                <input class="form-input" type="text" id="researchTopic" placeholder="e.g. Performance comparison, advantages, security">
+                            </div>
+
+                            <div class="research-buttons">
+                                <button class="btn btn-primary" id="btnCompare">Compare Videos</button>
+                                <button class="btn btn-secondary" id="btnContradictions">Detect Contradictions</button>
+                                <button class="btn btn-accent" id="btnReport">Generate Research Report</button>
+                            </div>
+                        </div>
+
+                        <div class="research-results glass-card">
+                            <h2 class="card-title">Analytical Output</h2>
+                            <p class="card-subtitle" id="researchOutputSubtitle">Execute a research tool on the left to see results.</p>
+                            <div class="research-output-content markdown-body" id="researchOutputArea">
+                                <div class="empty-output-state">
+                                    <svg viewBox="0 0 24 24" width="48" height="48" class="empty-icon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                                    <p>Select videos, define a topic, and click one of the model buttons to run RAG comparison pipelines.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. LEARNING HUB PAGE -->
+                <section class="page-panel" id="panel-learning">
+                    <div class="learning-layout">
+                        <!-- Top Video Select bar -->
+                        <div class="learning-selector glass-card">
+                            <div class="selector-row">
+                                <div class="selector-field">
+                                    <label class="form-label" for="learningVideoSelect">Select Video to Study</label>
+                                    <select class="form-select" id="learningVideoSelect">
+                                        <option value="">-- Choose a Video --</option>
+                                    </select>
+                                </div>
+                                <div class="selector-actions">
+                                    <button class="learning-tab-btn active" data-tab="summary">Summary</button>
+                                    <button class="learning-tab-btn" data-tab="quiz">Interactive Quiz</button>
+                                    <button class="learning-tab-btn" data-tab="flashcards">Flashcards</button>
+                                    <button class="learning-tab-btn" data-tab="notes">Study Notes</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel Contents -->
+                        <div class="learning-display glass-card margin-top">
+                            <!-- A. SUMMARY PANEL -->
+                            <div class="learning-content-tab active" id="learn-summary">
+                                <div class="summary-controls">
+                                    <span class="control-lbl">Summary Type:</span>
+                                    <button class="chip-btn active" data-summary-type="detailed">Detailed</button>
+                                    <button class="chip-btn" data-summary-type="chapter_wise">Chapter-Wise</button>
+                                    <button class="chip-btn" data-summary-type="bullet_points">Key Points</button>
+                                    <button class="chip-btn" data-summary-type="short">Short</button>
+                                </div>
+                                <div class="markdown-body learning-output" id="summaryOutput">
+                                    <p class="select-video-prompt">Please select a video from the drop-down menu above.</p>
+                                </div>
+                            </div>
+
+                            <!-- B. QUIZ PANEL -->
+                            <div class="learning-content-tab" id="learn-quiz">
+                                <div class="quiz-controls">
+                                    <span class="control-lbl">Difficulty:</span>
+                                    <button class="chip-btn active" data-quiz-diff="intermediate">Intermediate</button>
+                                    <button class="chip-btn" data-quiz-diff="easy">Easy</button>
+                                    <button class="chip-btn" data-quiz-diff="advanced">Advanced</button>
+                                    <button class="btn btn-secondary btn-sm" id="btnGenerateQuiz">Generate Quiz</button>
+                                </div>
+                                <div class="learning-output" id="quizOutput">
+                                    <p class="select-video-prompt">Select a video and click "Generate Quiz" to load multiple-choice study questions.</p>
+                                </div>
+                            </div>
+
+                            <!-- C. FLASHCARDS PANEL -->
+                            <div class="learning-content-tab" id="learn-flashcards">
+                                <div class="flashcards-controls">
+                                    <button class="btn btn-secondary btn-sm" id="btnGenerateFlashcards">Generate Flashcards</button>
+                                </div>
+                                <div class="learning-output" id="flashcardsOutput">
+                                    <p class="select-video-prompt">Select a video and click "Generate Flashcards".</p>
+                                </div>
+                            </div>
+
+                            <!-- D. NOTES PANEL -->
+                            <div class="learning-content-tab" id="learn-notes">
+                                <div class="notes-controls">
+                                    <button class="btn btn-secondary btn-sm" id="btnGenerateNotes">Create Study Guide</button>
+                                </div>
+                                <div class="markdown-body learning-output" id="notesOutput">
+                                    <p class="select-video-prompt">Select a video and click "Create Study Guide" to generate organized notes.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. ANALYTICS PAGE -->
+                <section class="page-panel" id="panel-analytics">
+                    <div class="grid grid-3">
+                        <div class="glass-card stat-card">
+                            <div class="stat-card-title">API Requests</div>
+                            <div class="stat-card-val" id="analyticsApiCalls">0</div>
+                            <div class="stat-card-desc">Total model calls made</div>
+                        </div>
+                        <div class="glass-card stat-card">
+                            <div class="stat-card-title">Token Consumed</div>
+                            <div class="stat-card-val" id="analyticsTotalTokens">0</div>
+                            <div class="stat-card-desc">Sum of prompt & completion tokens</div>
+                        </div>
+                        <div class="glass-card stat-card">
+                            <div class="stat-card-title">Estimated Cost</div>
+                            <div class="stat-card-val" id="analyticsEstCost">$0.00</div>
+                            <div class="stat-card-desc">Based on API volume breakdown</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-2 margin-top">
+                        <!-- Chart Card -->
+                        <div class="glass-card">
+                            <h2 class="card-title">Token Distribution by Provider</h2>
+                            <p class="card-subtitle">Comparison of API resource allocation</p>
+                            <div class="chart-container" id="analyticsChartArea">
+                                <!-- Populated by dynamic SVG -->
+                                <div class="chart-empty">No records to plot. Make chat requests to track tokens!</div>
+                            </div>
+                        </div>
+                        <!-- General details list -->
+                        <div class="glass-card">
+                            <h2 class="card-title">Query Logs Summary</h2>
+                            <p class="card-subtitle">Most recent RAG queries made</p>
+                            <div class="query-list" id="analyticsQueryList">
+                                <p class="list-empty">No query records found.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Auth Modal (Overlay for registration / login) -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-card glass-card">
+            <div class="auth-header">
+                <h2>QuestTube <span class="brand-ai">AI</span></h2>
+                <p id="authSubtitle">Login to access your RAG Research Workspace</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <label class="form-label" for="loginUsername">Username</label>
+                    <input class="form-input" type="text" id="loginUsername" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <input class="form-input" type="password" id="loginPassword" placeholder="Enter password" required>
+                </div>
+                <button class="btn btn-primary" type="submit">Sign In</button>
+                <p class="auth-toggle">Don't have an account? <a href="#" id="toggleToRegister">Create account</a></p>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label class="form-label" for="registerUsername">Username</label>
+                    <input class="form-input" type="text" id="registerUsername" placeholder="Choose username" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerEmail">Email</label>
+                    <input class="form-input" type="email" id="registerEmail" placeholder="user@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerPassword">Password</label>
+                    <input class="form-input" type="password" id="registerPassword" placeholder="Minimum 6 characters" required>
+                </div>
+                <button class="btn btn-primary" type="submit">Register Account</button>
+                <p class="auth-toggle">Already have an account? <a href="#" id="toggleToLogin">Sign In</a></p>
+            </form>
+
+            <div id="authFeedback" class="feedback-msg"></div>
+        </div>
+    </div>
+
+    <!-- YouTube Iframe API Script -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <!-- App Client Script -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
