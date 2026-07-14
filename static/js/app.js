@@ -1066,6 +1066,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Forms Submit
+    // Dashboard Tab switching (Single Video vs Playlist Import)
+    document.querySelectorAll('.tabs .tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tabs .tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const targetTab = btn.getAttribute('data-tab');
+            document.querySelectorAll('#panel-dashboard .tab-content').forEach(content => {
+                if (content.id === `tab-${targetTab}`) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        });
+    });
+
     document.getElementById('loginForm').addEventListener('submit', handleLogin);
     document.getElementById('registerForm').addEventListener('submit', handleRegister);
     document.getElementById('addVideoForm').addEventListener('submit', addSingleVideo);
