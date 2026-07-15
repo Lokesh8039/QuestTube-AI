@@ -20,7 +20,7 @@ class GeminiProvider(LLMProvider, EmbeddingProvider):
         if not api_key:
             raise ValueError("GEMINI_API_KEY is not set in Django settings or .env file.")
         self.client = genai.Client(api_key=api_key)
-        self.llm_model = 'gemini-flash-latest'
+        self.llm_model = 'gemini-3.1-flash-lite'
         self.embedding_model = 'gemini-embedding-001'
 
     def generate(self, prompt: str, system_instruction: str = None) -> str:
