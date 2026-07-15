@@ -4,7 +4,7 @@ QuestTube AI is a premium, full-stack AI-powered YouTube Research Assistant buil
 
 ---
 
-## 🌟 Key Features
+## Key Features
 
 * **Multi-Video & Playlist Ingestion**: Submitting a single video URL or an entire YouTube playlist processes all relevant videos, pulls transcripts asynchronously, chunks text blocks, and fetches metadata.
 * **Semantic Vector Search (RAG)**: Processes and queries transcripts using a SQLite vector database with custom NumPy-based cosine similarity search to retrieve contextual snippets.
@@ -23,7 +23,7 @@ QuestTube AI is a premium, full-stack AI-powered YouTube Research Assistant buil
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 * **Backend**: Python 3.13, Django 6.0, Django REST Framework, SQLite
 * **Mathematics**: NumPy (vector cosine similarity calculation)
@@ -34,7 +34,7 @@ QuestTube AI is a premium, full-stack AI-powered YouTube Research Assistant buil
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 config/                  # Main settings & routing
@@ -58,7 +58,7 @@ static/                  # Custom CSS (style.css) & Client JS (app.js)
 
 ---
 
-## 🚀 Setup & Execution Guide
+## Setup & Execution Guide
 
 ### 1. Prerequisites
 Ensure you have Python 3.10+ and Git installed on your system.
@@ -83,7 +83,19 @@ pip install -r requirements.txt
 ```
 
 ### 4. Configure Environment Variables
-Create a `.env` file in the project root:
+Copy the environment variables example file to `.env`:
+
+On Windows (Command Prompt / PowerShell):
+```cmd
+copy .env.example .env
+```
+
+On macOS / Linux:
+```bash
+cp .env.example .env
+```
+
+Open the newly created `.env` file and configure your settings:
 ```ini
 # Django Config
 SECRET_KEY=your-secure-django-key
@@ -113,7 +125,7 @@ Visit **`http://127.0.0.1:8000/`** to log in, register, and start researching!
 
 ---
 
-## 🧪 Running Automated Tests
+## Running Automated Tests
 The suite includes Django unit tests covering user auth, transcript scraping, sentence overlaps, and NumPy cosine similarity scoring:
 ```bash
 python manage.py test
